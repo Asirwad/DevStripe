@@ -1,5 +1,5 @@
 venv/
-src/static/vendors
+src/staticfiles/vendors
 local-cdn/
 
 # Byte-compiled / optimized / DLL files
