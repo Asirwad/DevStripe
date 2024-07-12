@@ -1,5 +1,6 @@
 venv/
-
+src/static/vendors
+local-cdn/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
