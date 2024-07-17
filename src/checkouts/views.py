@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseBadRequest
 
-from subscriptions.models import SubscriptionPrice
+from subscriptions.models import SubscriptionPrice, Subscription, UserSubscription
+from django.contrib.auth import get_user_model
 import helpers.billing
 from django.conf import settings
 
+User = get_user_model()
 BASE_URL = settings.BASE_URL
 
 # Create your views here.
@@ -41,4 +44,36 @@ def checkout_redirect_view(request):
     return redirect(url)
 
 def checkout_finilized_view(request):
-    pass
+    session_id = request.GET.get("session_id")
+    customer_id, plan_id = helpers.billing.get_checkout_customer_plan(session_id)
+
+    try:
+        sub_obj = Subscription.objects.get(subscriptionprice__stripe_id=plan_id)
+    except:
+        sub_obj = None
+
+    try:
+        user_obj = User.objects.get(customer__stripe_id=customer_id)
+    except:
+        user_obj = None
+
+    _user_sub_object_exists = False
+    try:
+        _user_sub_object = UserSubscription.objects.get(user=user_obj)
+        _user_sub_object_exists = True
+    except UserSubscription.DoesNotExist:
+        _user_sub_object = UserSubscription.objects.create(user=user_obj, subscription=sub_obj)
+    except:
+        _user_sub_object = None
+
+    if None in [sub_obj, user_obj, _user_sub_object]:
+        return HttpResponseBadRequest("There was an error with your account, please contact with us")
+    
+    if _user_sub_object_exists:
+        _user_sub_object.subscription = sub_obj
+        _user_sub_object.save()
+        
+    context = {
+        
+    }
+    return render(request, "checkout/success.html", context)
