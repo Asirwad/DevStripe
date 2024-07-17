@@ -45,7 +45,7 @@ def checkout_redirect_view(request):
 
 def checkout_finilized_view(request):
     session_id = request.GET.get("session_id")
-    customer_id, plan_id = helpers.billing.get_checkout_customer_plan(session_id)
+    customer_id, plan_id, sub_stripe_id = helpers.billing.get_checkout_customer_plan(session_id)
 
     try:
         sub_obj = Subscription.objects.get(subscriptionprice__stripe_id=plan_id)
@@ -58,11 +58,19 @@ def checkout_finilized_view(request):
         user_obj = None
 
     _user_sub_object_exists = False
+    updated_sub_options = {
+        "subscription": sub_obj,
+        "stripe_id": sub_stripe_id,
+        "user_cancelled": False
+    }
     try:
         _user_sub_object = UserSubscription.objects.get(user=user_obj)
         _user_sub_object_exists = True
     except UserSubscription.DoesNotExist:
-        _user_sub_object = UserSubscription.objects.create(user=user_obj, subscription=sub_obj)
+        _user_sub_object = UserSubscription.objects.create(
+            user=user_obj, 
+            **updated_sub_options
+        )
     except:
         _user_sub_object = None
 
@@ -70,9 +78,20 @@ def checkout_finilized_view(request):
         return HttpResponseBadRequest("There was an error with your account, please contact with us")
     
     if _user_sub_object_exists:
-        _user_sub_object.subscription = sub_obj
+        # cancel old subscription
+        old_stripe_id = _user_sub_object.stripe_id
+        if old_stripe_id is not None:
+            helpers.billing.cancel_subscription(
+                stripe_id=old_stripe_id,
+                reason="Auto ended, new membership",
+                feedback="other",
+                raw=True
+            ) 
+        # assign new subscription
+        for k, v in updated_sub_options.items():
+            setattr(_user_sub_object, k, v)
         _user_sub_object.save()
-        
+
     context = {
         
     }
