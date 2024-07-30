@@ -90,9 +90,12 @@ def get_subscription(stripe_id, raw=True):
         return response
     return serialize_subscription(response)
 
+def get_customer_active_subscriptions(customer_stripe_id):
+    return stripe.Subscription.list(customer=customer_stripe_id, status="active")
+
 def cancel_subscription(stripe_id, reason="",feedback="other",cancel_at_period_end=False, raw=True):
     if cancel_at_period_end:
-        response = stripe.Subscription.cancel(
+        response = stripe.Subscription.modify(
             stripe_id,
             cancel_at_period_end=cancel_at_period_end,
             cancellation_details={
