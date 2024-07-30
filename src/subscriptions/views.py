@@ -36,6 +36,7 @@ def user_subscription_cancel_view(request):
                 user_subscription_object.stripe_id, 
                 reason="User wanted to end", 
                 feedback="other",
+                cancel_at_period_end=True,
                 raw=False)
             for k, v in sub_data.items():
                 setattr(user_subscription_object, k, v)
