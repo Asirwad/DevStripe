@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseBadRequest
+from django.contrib import messages
 
 from subscriptions.models import SubscriptionPrice, Subscription, UserSubscription
 from django.contrib.auth import get_user_model
@@ -101,7 +102,8 @@ def checkout_finilized_view(request):
         for k, v in updated_sub_options.items():
             setattr(_user_sub_object, k, v)
         _user_sub_object.save()
-
+        messages.success(request, "Success! Thank you for joining")
+        return redirect(_user_sub_object.get_absolute_url())
     context = {
         
     }

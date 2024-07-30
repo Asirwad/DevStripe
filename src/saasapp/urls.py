@@ -44,4 +44,5 @@ urlpatterns = [
     path('checkout/start/', checkouts_views.checkout_redirect_view, name='stripe-checkout-start'),
     path('checkout/success/', checkouts_views.checkout_finilized_view, name='stripe-checkout-end'),
     path('accounts/billing/', subscriptions_views.user_subscription_view, name="user_subscription"),
+    path('accounts/billing/cancel/', subscriptions_views.user_subscription_cancel_view, name="user_subscription_cancel"),
 ]
