@@ -5,6 +5,7 @@ from django.contrib import messages
 
 from subscriptions.models import SubscriptionPrice, UserSubscription
 import helpers.billing
+from subscriptions import utils as sub_utils
 
 # Create your views here.
 @login_required
@@ -12,13 +13,11 @@ def user_subscription_view(request):
     user_sub_obj, created = UserSubscription.objects.get_or_create(user=request.user)
     # sub_data = user_sub_obj.searilize()
     if request.method == "POST":
-        if user_sub_obj.stripe_id:
-            sub_data = helpers.billing.get_subscription(user_sub_obj.stripe_id, raw=False)
-            for k, v in sub_data.items():
-                setattr(user_sub_obj, k, v)
-            user_sub_obj.save()
-        print("Your plan details has been updated!")
-        messages.success(request, "Your plan details has been updated!")
+        finished = sub_utils.refresh_users_subscription(user_ids=[request.user.id])
+        if finished: 
+            messages.success(request, "Your plan details has been updated!")
+        else:
+            messages.error(request, "Your plan details has not been updated!")
         return redirect(user_sub_obj.get_absolute_url())
     return render(request, 
                   "subscriptions/user_subscription_detail_view.html",
