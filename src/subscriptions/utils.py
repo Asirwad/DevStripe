@@ -4,12 +4,26 @@ import helpers.billing
 
 from django.db.models import Q
 
-def refresh_users_subscription(user_ids=None, active_only=True, verbose=False):
+def refresh_users_subscription(
+        user_ids=None, 
+        active_only=True, 
+        days_ago=0, 
+        days_left=0,
+        day_start=0,
+        day_end=0,
+        verbose=False
+        ):
     qs = UserSubscription.objects.all()
     if active_only:
         qs = qs.by_active_trailing()
     if user_ids is not None:
         qs = qs.by_user_ids(user_ids=user_ids)
+    if days_ago>0:
+        qs = qs.by_days_ago(days_ago=days_ago)
+    if days_left > 0:
+        qs = qs.by_days_left(days_left=days_left)
+    if day_start > 0 and day_end > 0:
+        qs = qs.by_days_range(days_start=day_start, days_end=day_end)
     
     complete_count, qs_count = 0, qs.count()
     for obj in qs:
