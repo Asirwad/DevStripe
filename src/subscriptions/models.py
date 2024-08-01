@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group, Permission
 from django.db.models.signals import post_save
 import helpers.billing
 from django.urls import reverse
+from django.db.models import Q
 
 from django.conf import settings
 
@@ -150,6 +151,30 @@ class SubscriptionStatus(models.TextChoices):
         UNPAID = "unpaid", "Unpaid"
         PAUSED = "paused", "Paused"
 
+class UserSubscriptionQuerySet(models.QuerySet):
+    def by_active_trailing(self):
+        active_qs_lookup = (
+            Q(status = SubscriptionStatus.ACTIVE) |
+            Q(status = SubscriptionStatus.TRAILING)
+        )
+        return self.filter(active_qs_lookup)
+    def by_user_ids(self, user_ids=None):
+        qs = self
+        if isinstance(user_ids, list):
+            qs =  self.filter(user_id__in=user_ids)
+        elif isinstance(user_ids, int):
+            qs =  self.filter(user_id__in=[user_ids])
+        elif isinstance(user_ids, str):
+            qs =  self.filter(user_id__in=[user_ids])
+        return qs
+    
+class UserSubscriptionManager(models.Manager):
+    def get_queryset(self):
+        return UserSubscriptionQuerySet(self.model, self._db)
+
+    # def by_user_ids(self, user_ids=None):
+    #    return self.get_queryset().by_user_ids(user_ids=user_ids)
+
 
 class UserSubscription(models.Model):
     
@@ -163,6 +188,8 @@ class UserSubscription(models.Model):
     current_period_end = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
     cancel_at_period_end = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=SubscriptionStatus.choices, null=True, blank=True)
+
+    objects = UserSubscriptionManager()
 
     def get_absolute_url(self):
         return reverse("user_subscription")

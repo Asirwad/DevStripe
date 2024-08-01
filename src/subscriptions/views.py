@@ -13,7 +13,7 @@ def user_subscription_view(request):
     user_sub_obj, created = UserSubscription.objects.get_or_create(user=request.user)
     # sub_data = user_sub_obj.searilize()
     if request.method == "POST":
-        finished = sub_utils.refresh_users_subscription(user_ids=[request.user.id])
+        finished = sub_utils.refresh_users_subscription(user_ids=[request.user.id], active_only=False)
         if finished: 
             messages.success(request, "Your plan details has been updated!")
         else:
