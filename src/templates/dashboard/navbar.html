@@ -1,3 +1,4 @@
+{% load static %}
 <nav class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex justify-start items-center">
@@ -11,7 +12,7 @@
           <span class="sr-only">Toggle sidebar</span>
         </button>
         <a href="{% url "home" %}" class="flex items-center justify-between mr-4">
-          <img src="https://flowbite.s3.amazonaws.com/logo.svg" class="mr-3 h-8" alt="Flowbite Logo"/>
+          <img src="{% static 'images/icon.ico' %}" class="mr-3 h-10" alt="Flowbite Logo"/>
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">DevStripe</span>
         </a>
         <form action="#" method="GET" class="hidden">

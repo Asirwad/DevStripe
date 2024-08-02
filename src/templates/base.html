@@ -1,7 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         <title>{% block head_title %}DevStripe{% endblock head_title %}</title>
+        <link rel="icon" href="{% static 'images/icon.ico' %}" type="image/x-icon">
         {% include "base/css.html" %}
     </head>
     <body>
