@@ -1,13 +1,20 @@
 {% extends "account/base.html" %}
 {% load i18n %}
+{% load static %}
 {% block head_title %}
     {% translate "Sign out" %}
 {% endblock %}
 {% block whitebox %}
     <form method="post" action="{% url 'account_logout' %}">
+        <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+            <img src="{% static "images/icon.ico" %}" class="h-8" alt="Flowbite Logo" />
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">DevStripe</span>
+        </a><br>
         {% csrf_token %}
         <p>{% translate "Are you sure you want to sign out?" %}</p>
         {% translate "Sign out" as signout_message %}
-        {% include "account/_button.html" with text=signout_message %}
+        {% include "account/_button.html" with text=signout_message %}<br>
+        <a href="{% url 'home' %}" class="w-full block text-center py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Go back</a>
+
     </form>
 {% endblock %}
