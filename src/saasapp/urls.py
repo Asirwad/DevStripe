@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from auth import views as auth_views
 from subscriptions import views as subscriptions_views
+from landing import views as landing_views
 from checkouts import views as checkouts_views
 from .views import (home_view,
                     about_view, 
@@ -27,12 +28,10 @@ from .views import (home_view,
 )
 
 urlpatterns = [
-    path("", home_view, name='home'),
+    path("", landing_views.landing_page_view, name='home'),
     path('admin/', admin.site.urls),
     path('home/', home_view),
     path("about/", about_view),
-    # path('login/', auth_views.login_view),
-    # path('register/', auth_views.register_view),
     path('accounts/', include('allauth.urls')),
     path('protected/', pw_protected_view),
     path('protected/user-only/', user_only_view),

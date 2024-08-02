@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block head_title %} {{ block.super }} | Build your SaaS now{% endblock head_title %}
+
+{% block content %}
+    {% include "landing/hero.html" %}
+    {% include "landing/features.html" %}
+    {% include "landing/social-proof.html" %}
+{% endblock content %}
+
