@@ -51,7 +51,7 @@ BASE_URL = config("BASE_URL", default=None)
 ALLOWED_HOSTS = [
     ".railway.app"
 ]
-CSRF_TRUSTED_ORIGINS = [".railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://devstripe-production.up.railway.app"]
 CSRF_ALLOWED_ORIGINS = [".railway.app"]
 CORS_ORIGINS_WHITELIST = [".railway.app"]
 
