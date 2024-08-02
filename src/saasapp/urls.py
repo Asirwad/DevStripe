@@ -28,7 +28,7 @@ from .views import (home_view,
 )
 
 urlpatterns = [
-    path("", landing_views.landing_page_view, name='home'),
+    path("", landing_views.landing_dashboard_page_view, name='home'),
     path('admin/', admin.site.urls),
     path('home/', home_view),
     path("about/", about_view),
