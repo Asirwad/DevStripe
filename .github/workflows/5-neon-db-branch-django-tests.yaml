@@ -16,7 +16,7 @@ jobs:
       # DJANGO_SECRET_KEY: not-good
       NEON_GH_BRANCH: "gh-delete"
       NEON_PROD_BRANCH: "main"
-      NEON_PROJECT_ID: ${{  }}
+      NEON_PROJECT_ID: ${{ secrets.NEON_PROJECT_ID }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -46,9 +46,6 @@ jobs:
         run: |
           MY_GEN_KEY=$(openssl rand -base64 32)
           echo "DJANGO_SECRET_KEY=$MY_GEN_KEY" >> $GITHUB_ENV
-      - name: Show DATABASE_URL
-        run: |
-           echo ${{ env.DATABASE_URL }}
       - name: Install Requirements
         run: |
           python -m pip install pip --upgrade
