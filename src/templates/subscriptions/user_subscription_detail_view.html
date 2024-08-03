@@ -1,21 +1,28 @@
 {% extends "dashboard/base.html" %}
 
-{% block head_title %}subscription{% endblock head_title %}
+{% block head_title %}Subscription{% endblock head_title %}
 
 {% block content %}
-    <h1 class="text-lg font-medium"> Your Subscription </h1>
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6">Your Subscription</h1>
     
-    <p>Plan name: {{subscription.plan_name}}</p>
-    <p>Status: {{subscription.status|title}}</p>
-    <p>Membership age: {{subscription.original_period_start|timesince}}</p>
-    <p>Start: {{subscription.current_period_start}}</p>
-    <p>Ending in: {{subscription.current_period_end|timeuntil}} - ({{subscription.current_period_end}})</P>
-    
-    <br>
-    <form action="" method="POST">
-        {% csrf_token %}
-        <button type="submit">Refresh</button>
-    </form><br>
-    <a href="{{subscription.get_cancel_url}}">Cancel membership</a>
-{% endblock content %}
+    <div class="mb-4">
+        <p class="text-lg text-gray-600"><span class="font-semibold">Plan name:</span> {{subscription.plan_name}}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold">Status:</span> {{subscription.status|title}}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold">Membership age:</span> {{subscription.original_period_start|timesince}}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold">Start:</span> {{subscription.current_period_start}}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold">Ending in:</span> {{subscription.current_period_end|timeuntil}} - ({{subscription.current_period_end}})</p>
+    </div>
 
+    <form action="" method="POST" class="mb-4">
+        {% csrf_token %}
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75">
+            Refresh
+        </button>
+    </form>
+
+    <a href="{{subscription.get_cancel_url}}" class="inline-block px-4 py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-75">
+        Cancel membership
+    </a>
+</div>
+{% endblock content %}
