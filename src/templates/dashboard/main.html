@@ -1,11 +1,19 @@
 {% extends "dashboard/base.html" %}
 
 {% block head_title %} {{ block.super }} | Dashboard{% endblock head_title %}
-
 {% block content %}
-<div id="" class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4">
-
+<div id="" class="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-white border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-auto mb-4 shadow-md">
+  {% include "dashboard/user-card.html" %}
+  <div class="col-span-1 flex flex-col space-y-4">
+    <p class="text-lg text-gray-600"><span class="font-semibold">Plan name:</span> {{ subscription.plan_name }}</p>
+    <p class="text-lg text-gray-600"><span class="font-semibold">Status:</span> {{ subscription.status|title }}</p>
+    <p class="text-lg text-gray-600"><span class="font-semibold">Membership age:</span> {{ subscription.original_period_start|timesince }}</p>
+    <p class="text-lg text-gray-600"><span class="font-semibold">Start:</span> {{ subscription.current_period_start }}</p>
+    <p class="text-lg text-gray-600"><span class="font-semibold">Ending in:</span> {{ subscription.current_period_end|timeuntil }} - ({{ subscription.current_period_end }})</p>
+  </div>
 </div>
+
+
 <div class="grid grid-cols-2 gap-4 mb-4 h-72">
   <div id="" class="rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72">
     {% include "dashboard/info-card.html" %}
@@ -18,4 +26,3 @@
 {% include "dashboard/footer.html" %}
 
 {% endblock content %}
-
