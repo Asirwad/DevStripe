@@ -62,7 +62,9 @@ def create_price(currency="usd", unit_amount="9999", interval="month", product=N
 
 def start_checkout_session(customer_id, success_url="",cancel_url="", price_stripe_id="", raw=True):
     if not success_url.endswith("?session_id={CHECKOUT_SESSION_ID}"):
+        print("success_url", success_url)
         success_url = f"{success_url}" + "?session_id={CHECKOUT_SESSION_ID}"
+    print("success_url", success_url)
     response = stripe.checkout.Session.create(
         customer=customer_id,
         success_url=success_url,
